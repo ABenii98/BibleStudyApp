@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles/ChapterList.css"
 
 function ChapterList({ book, verses, onSelectChapter }) {
   // Get unique chapters for the selected book

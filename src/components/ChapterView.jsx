@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles/ChapterView.css"
 
 function ChapterView({ book, chapter, verses }) {
   const filteredVerses = verses

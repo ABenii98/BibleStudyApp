@@ -1,0 +1,38 @@
+/* Chapter view styling */
+.chapter-view {
+  margin-top: 1rem;
+}
+
+.chapter-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 1.8em;
+  color: #1a2a44;
+  margin: 1.5rem 0 1rem;
+  text-align: center;
+}
+
+.verse {
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+  font-size: 1.1em;
+  color: #333;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.verse-number {
+  font-weight: 600;
+  color: #1a2a44;
+  margin-right: 0.5em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chapter-title {
+    font-size: 1.5em;
+  }
+
+  .verse {
+    font-size: 1em;
+  }
+}
