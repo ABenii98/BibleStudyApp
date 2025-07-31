@@ -1,9 +1,9 @@
 .app-container {
   min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Stack vertically */
-  justify-content: flex-start; /* Align content to the top */
-  align-items: center; /* Center horizontally */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   background: linear-gradient(135deg, #87CEEB, #E0F6FF, #B0E0E6);
   padding: 20px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -17,14 +17,16 @@
   width: 100%;
   max-width: 800px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Center text within wrapper */
-  display: block; /* Ensure block flow */
-  margin: 0 auto; /* Center within container */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  min-height: 0;
 }
 
 .main-title {
   font-size: 2.5em;
-  color: #1a2a44;
+  color: #ffffff;
   margin-bottom: 1.5rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -35,18 +37,33 @@
   margin: 1rem 0;
 }
 
-.book-lists, .chapter-content {
+.book-lists {
   opacity: 1;
-  /* Removed transition to test layout without interference */
-  /* transition: opacity 0.5s; */
+  order: 1;
+}
+
+.chapter-content {
+  opacity: 1;
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+}
+
+.book-lists, .chapter-content {
+  transition: opacity 0.5s;
 }
 
 .fade-out {
   opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.5s, height 0.5s;
 }
 
 .fade-in {
   opacity: 1;
+  height: auto;
 }
 
 .testament-section {
@@ -62,8 +79,8 @@
 }
 
 .back-button {
-  display: block;
-  margin: 0 auto 1.5rem;
+  display: inline-block; /* Change to inline-block for better control */
+  margin: 0 0 0.5rem 0; /* Reduce bottom margin to minimize push-down */
   padding: 8px 16px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -78,10 +95,6 @@
 .back-button:hover {
   background: #e6f0fa;
   transform: translateY(-2px);
-}
-
-.chapter-content {
-  margin-top: 1rem; /* Ensure space above chapter content */
 }
 
 @media (max-width: 768px) {
