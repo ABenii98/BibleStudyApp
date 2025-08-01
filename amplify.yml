@@ -6,6 +6,8 @@ backend:
         - echo "Setting AWS credentials from custom variables"
         - export AWS_ACCESS_KEY_ID=$AMPLIFY_ACCESS_KEY
         - export AWS_SECRET_ACCESS_KEY=$AMPLIFY_SECRET_KEY
+        - echo "AWS_ACCESS_KEY_ID is set to: $AWS_ACCESS_KEY_ID"
+        - echo "AWS_SECRET_ACCESS_KEY is set to: $AWS_SECRET_ACCESS_KEY"
     build:
       commands:
         - '# Execute Amplify CLI with the helper script'
@@ -18,6 +20,8 @@ frontend:
         - npm install --force
         - export AWS_ACCESS_KEY_ID=$AMPLIFY_ACCESS_KEY
         - export AWS_SECRET_ACCESS_KEY=$AMPLIFY_SECRET_KEY
+        - echo "AWS_ACCESS_KEY_ID is set to: $AWS_ACCESS_KEY_ID"
+        - echo "AWS_SECRET_ACCESS_KEY is set to: $AWS_SECRET_ACCESS_KEY"
     build:
       commands:
         - npm run build
