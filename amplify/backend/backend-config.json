@@ -1,6 +1,6 @@
 {
   "auth": {
-    "biblestudyc0b3b9de": {
+    "biblestudy7a0d76d2": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -15,9 +15,7 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [
-          "GOOGLE"
-        ],
+        "socialProviders": [],
         "usernameAttributes": [
           "EMAIL"
         ],

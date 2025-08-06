@@ -3,30 +3,15 @@
 
 const awsmobile = {
     "aws_project_region": "us-east-1",
-    "aws_cognito_identity_pool_id": "us-east-1:61f08c02-a50a-43b9-bb85-ce15ca3a6e78",
+    "aws_cognito_identity_pool_id": "us-east-1:d3eb62da-8889-4d0f-b2c8-76f5a3863628",
     "aws_cognito_region": "us-east-1",
-    "aws_user_pools_id": "us-east-1_EmgoTkcV8",
-    "aws_user_pools_web_client_id": "6j14bpott75381vs4kkkugfk71",
-    "oauth": {
-        "domain": "biblestudyc0b3b9de-c0b3b9de-dev.auth.us-east-1.amazoncognito.com",
-        "scope": [
-            "phone",
-            "email",
-            "openid",
-            "profile",
-            "aws.cognito.signin.user.admin"
-        ],
-        "redirectSignIn": "http://localhost:3000/",
-        "redirectSignOut": "http://localhost:3000/",
-        "responseType": "code"
-    },
-    "federationTarget": "COGNITO_USER_POOLS",
+    "aws_user_pools_id": "us-east-1_A7HbfNF6I",
+    "aws_user_pools_web_client_id": "357n3js2ssgqm8icc2gea7le2t",
+    "oauth": {},
     "aws_cognito_username_attributes": [
         "EMAIL"
     ],
-    "aws_cognito_social_providers": [
-        "GOOGLE"
-    ],
+    "aws_cognito_social_providers": [],
     "aws_cognito_signup_attributes": [
         "EMAIL"
     ],
