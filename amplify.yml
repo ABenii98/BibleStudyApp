@@ -8,9 +8,9 @@ backend:
 frontend:
   phases:
     preBuild:
-      commands:
-        - npm ci --cache .npm --prefer-offline
-        - npm install --force
+    commands:
+      - npm ci --cache .npm --prefer-offline
+      - npm install --force
     build:
       commands:
         - npm run build
@@ -20,4 +20,4 @@ frontend:
       - '**/*'
   cache:
     paths:
-        - node_modules/**/*
+      - node_modules/**/*
