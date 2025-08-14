@@ -5,7 +5,7 @@ import ChapterView from "./components/ChapterView.jsx";
 import { Authenticator } from "@aws-amplify/ui-react";
 import "./components/styles/App.css";
 import { Amplify } from "aws-amplify";
-import awsExports from "./aws-exports.js";
+import awsmobile from "./aws-exports.js";
 
 function App() {
   const [selectedBook, setSelectedBook] = useState(null);

@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "biblestudy7a0d76d2_identitypool_7a0d76d2",
+    "identityPoolName": "biblestudy0ad4815b_identitypool_0ad4815b",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "bibles7a0d76d2",
-    "userPoolName": "biblestudy7a0d76d2_userpool_7a0d76d2",
+    "resourceNameTruncated": "bibles0ad4815b",
+    "userPoolName": "biblestudy0ad4815b_userpool_0ad4815b",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "bibles7a0d76d2_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "bibles0ad4815b_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "7a0d76d2",
-    "resourceName": "biblestudy7a0d76d2",
+    "sharedId": "0ad4815b",
+    "resourceName": "biblestudy0ad4815b",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
