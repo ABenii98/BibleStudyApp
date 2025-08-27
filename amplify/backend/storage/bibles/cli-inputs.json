@@ -1,0 +1,14 @@
+{
+  "resourceName": "bibles",
+  "policyUUID": "51d54527",
+  "bucketName": "biblestudybibleversions",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

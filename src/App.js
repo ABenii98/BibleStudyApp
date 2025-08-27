@@ -3,9 +3,14 @@ import BookList from "./components/BookList.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterView from "./components/ChapterView.jsx";
 import { Authenticator } from "@aws-amplify/ui-react";
+import { Storage } from "aws-amplify";
 import "./components/styles/App.css";
+import "./components/styles/Auth.css";
 import { Amplify } from "aws-amplify";
 import awsmobile from "./aws-exports.js";
+
+// Configure Amplify for auth and S3 access
+Amplify.configure(awsmobile);
 
 function App() {
   const [selectedBook, setSelectedBook] = useState(null);
@@ -14,29 +19,57 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // State for Bible version, persisted in localStorage
+  const [selectedVersion, setSelectedVersion] = useState(() => {
+    return localStorage.getItem('bibleVersion') || 'KJV';
+  });
+
+  // Public domain Bible versions
+  const bibleVersions = ['KJV', 'ASV'];
+
   useEffect(() => {
     setLoading(true);
-    fetch("/bibles/kjv.json", {
-      headers: { Accept: "application/json" },
-    })
-      .then((res) => {
+    async function fetchBible() {
+      try {
+        // Use Storage.get for robust S3 access
+        const bibleUrl = await Storage.get(`bibles/${selectedVersion.toLowerCase()}.json`, { level: 'public' });
+        const res = await fetch(bibleUrl, { headers: { Accept: "application/json" } });
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         if (!Array.isArray(data)) throw new Error("Invalid JSON structure");
         setVerses(data);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Fetch error:", err);
         setError(err.message);
         setLoading(false);
-      });
-  }, []);
+      }
+    }
+    fetchBible();
+  }, [selectedVersion]);
+
+  // Persist version to localStorage
+  useEffect(() => {
+    localStorage.setItem('bibleVersion', selectedVersion);
+  }, [selectedVersion]);
 
   const bookOrder = [
-    "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", // ... (rest of the list)
+    // Old Testament (39 books)
+    "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+    "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+    "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+    "Ezra", "Nehemiah", "Esther", "Job", "Psalms",
+    "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah",
+    "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea",
+    "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum",
+    "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
+    // New Testament (27 books)
+    "Matthew", "Mark", "Luke", "John", "Acts",
+    "Romans", "1 Corinthians", "2 Corinthians", "Galatians",
+    "Ephesians", "Philippians", "Colossians", "1 Thessalonians",
+    "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
+    "Philemon", "Hebrews", "James", "1 Peter", "2 Peter",
+    "1 John", "2 John", "3 John", "Jude", "Revelation"
   ];
 
   const books = useMemo(() => {
@@ -61,6 +94,12 @@ function App() {
   const handleBack = () => {
     if (selectedChapter) setSelectedChapter(null);
     else if (selectedBook) setSelectedBook(null);
+  };
+
+  const handleVersionChange = (e) => {
+    setSelectedVersion(e.target.value);
+    setSelectedBook(null);
+    setSelectedChapter(null);
   };
 
   if (loading) {
@@ -91,6 +130,20 @@ function App() {
         <div className="app-container">
           <div className="content-wrapper">
             <h1 className="main-title">Holy Bible</h1>
+            <div className="version-selector">
+              <label htmlFor="bible-version">Version: </label>
+              <select
+                id="bible-version"
+                value={selectedVersion}
+                onChange={handleVersionChange}
+              >
+                {bibleVersions.map((version) => (
+                  <option key={version} value={version}>
+                    {version}
+                  </option>
+                ))}
+              </select>
+            </div>
             {books.oldTestament.length === 0 && books.newTestament.length === 0 && (
               <p className="error-message">No Bible data available.</p>
             )}
@@ -116,7 +169,7 @@ function App() {
                 )}
               </div>
             )}
-            <button onClick={signOut}>Sign out</button>
+            <button className="sign-out-button" onClick={signOut}>Sign out</button>
           </div>
         </div>
       )}
