@@ -1,15 +1,15 @@
 {
-  "dev": {
+  "master": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-biblestudy-dev-b606f-authRole",
-      "UnauthRoleArn": "arn:aws:iam::673341113430:role/amplify-biblestudy-dev-b606f-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::673341113430:role/amplify-biblestudy-dev-b606f-authRole",
+      "AuthRoleName": "amplify-biblestudy-master-ee64d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::673341113430:role/amplify-biblestudy-master-ee64d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::673341113430:role/amplify-biblestudy-master-ee64d-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-biblestudy-dev-b606f-deployment",
-      "UnauthRoleName": "amplify-biblestudy-dev-b606f-unauthRole",
-      "StackName": "amplify-biblestudy-dev-b606f",
-      "StackId": "arn:aws:cloudformation:us-east-1:673341113430:stack/amplify-biblestudy-dev-b606f/f5b6abc0-791c-11f0-9338-0e4d6e7dc447",
-      "AmplifyAppId": "d3refyaq38oqbt"
+      "DeploymentBucketName": "amplify-biblestudy-master-ee64d-deployment",
+      "UnauthRoleName": "amplify-biblestudy-master-ee64d-unauthRole",
+      "StackName": "amplify-biblestudy-master-ee64d",
+      "StackId": "arn:aws:cloudformation:us-east-1:673341113430:stack/amplify-biblestudy-master-ee64d/fa6908b0-6f36-11f0-935a-0affd9c08e4b",
+      "AmplifyAppId": "d22pbve6uca92l"
     },
     "categories": {
       "auth": {
