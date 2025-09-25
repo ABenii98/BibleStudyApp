@@ -1,0 +1,130 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* left and right pinned */
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  z-index: 1000;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Layout */
+.navbar-left {
+  flex: 0 0 auto;
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-right {
+  position: fixed;
+  top: 0px; /* Adjust based on navbar height */
+  right: -55px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 24px;
+  z-index: 1100;
+}
+
+/* Links */
+.nav-link {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  margin: 0 20px;
+  transition: color 0.3s ease, transform 0.2s ease;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #87CEEB;
+  transform: translateY(-2px);
+}
+
+
+.home-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.home-icon:hover {
+  transform: scale(1.15);
+}
+
+/* Sign out button */
+.sign-out-button {
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.sign-out-button:hover {
+  background: #e04343;
+}
+
+/* Profile link (top-right) */
+.profile-link {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.profile-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #87CEEB;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-link {
+    margin: 0 10px;
+    font-size: 0.95rem;
+  }
+
+  .home-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .profile-link {
+    font-size: 0.5rem;
+    padding: 5px 10px;
+  }
+
+  .sign-out-button {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}

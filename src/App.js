@@ -2,37 +2,30 @@ import React, { useState, useMemo, useEffect } from "react";
 import BookList from "./components/BookList.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterView from "./components/ChapterView.jsx";
-import { Authenticator } from "@aws-amplify/ui-react";
 import { Storage } from "aws-amplify";
 import "./components/styles/App.css";
-import "./components/styles/Auth.css";
-import { Amplify } from "aws-amplify";
-import awsmobile from "./aws-exports.js";
 
-// Configure Amplify for auth and S3 access
-Amplify.configure(awsmobile);
-
-function App() {
+function App({ signOut, user }) {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // State for Bible version, persisted in localStorage
   const [selectedVersion, setSelectedVersion] = useState(() => {
-    return localStorage.getItem('bibleVersion') || 'KJV';
+    return localStorage.getItem("bibleVersion") || "KJV";
   });
 
-  // Public domain Bible versions
-  const bibleVersions = ['KJV', 'ASV'];
+  const bibleVersions = ["KJV", "ASV"];
 
   useEffect(() => {
     setLoading(true);
     async function fetchBible() {
       try {
-        // Use Storage.get for robust S3 access
-        const bibleUrl = await Storage.get(`bibles/${selectedVersion.toLowerCase()}.json`, { level: 'public' });
+        const bibleUrl = await Storage.get(
+          `bibles/${selectedVersion.toLowerCase()}.json`,
+          { level: "public" }
+        );
         const res = await fetch(bibleUrl, { headers: { Accept: "application/json" } });
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();
@@ -48,13 +41,11 @@ function App() {
     fetchBible();
   }, [selectedVersion]);
 
-  // Persist version to localStorage
   useEffect(() => {
-    localStorage.setItem('bibleVersion', selectedVersion);
+    localStorage.setItem("bibleVersion", selectedVersion);
   }, [selectedVersion]);
 
   const bookOrder = [
-    // Old Testament (39 books)
     "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
     "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
     "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
@@ -63,7 +54,6 @@ function App() {
     "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea",
     "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum",
     "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
-    // New Testament (27 books)
     "Matthew", "Mark", "Luke", "John", "Acts",
     "Romans", "1 Corinthians", "2 Corinthians", "Galatians",
     "Ephesians", "Philippians", "Colossians", "1 Thessalonians",
@@ -106,7 +96,7 @@ function App() {
     return (
       <div className="app-container">
         <div className="content-wrapper">
-          <h1 className="main-title">Holy Bible</h1>
+          <h1 className="main-title">LightHouse</h1>
           <p className="error-message">Loading Bible data...</p>
         </div>
       </div>
@@ -117,7 +107,7 @@ function App() {
     return (
       <div className="app-container">
         <div className="content-wrapper">
-          <h1 className="main-title">Holy Bible</h1>
+          <h1 className="main-title">LightHouse</h1>
           <p className="error-message">Error loading Bible data: {error}</p>
         </div>
       </div>
@@ -125,55 +115,58 @@ function App() {
   }
 
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <div className="app-container">
-          <div className="content-wrapper">
-            <h1 className="main-title">Holy Bible</h1>
-            <div className="version-selector">
-              <label htmlFor="bible-version">Version: </label>
-              <select
-                id="bible-version"
-                value={selectedVersion}
-                onChange={handleVersionChange}
-              >
-                {bibleVersions.map((version) => (
-                  <option key={version} value={version}>
-                    {version}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {books.oldTestament.length === 0 && books.newTestament.length === 0 && (
-              <p className="error-message">No Bible data available.</p>
-            )}
-            <div className={`book-lists ${selectedBook ? 'fade-out' : 'fade-in'}`}>
-              <div className="testament-section">
-                <h2 className="testament-title">Old Testament</h2>
-                <BookList books={books.oldTestament} onSelect={handleBookSelect} />
-              </div>
-              <div className="testament-section">
-                <h2 className="testament-title">New Testament</h2>
-                <BookList books={books.newTestament} onSelect={handleBookSelect} />
-              </div>
-            </div>
-            {selectedBook && (
-              <div className={`chapter-content ${selectedBook ? 'fade-in' : 'fade-out'}`}>
-                <button className="back-button" onClick={handleBack}>
-                  Back to {selectedChapter ? 'Chapters' : 'Books'}
-                </button>
-                {selectedChapter ? (
-                  <ChapterView book={selectedBook} chapter={selectedChapter} verses={verses} />
-                ) : (
-                  <ChapterList book={selectedBook} verses={verses} onSelectChapter={handleChapterSelect} />
-                )}
-              </div>
-            )}
-            <button className="sign-out-button" onClick={signOut}>Sign out</button>
+    <div className="app-container">
+      <div className="content-wrapper">
+        <h1 className="main-title">LightHouse</h1>
+        <div className="version-selector">
+          <label htmlFor="bible-version">Version: </label>
+          <select
+            id="bible-version"
+            value={selectedVersion}
+            onChange={handleVersionChange}
+          >
+            {bibleVersions.map((version) => (
+              <option key={version} value={version}>
+                {version}
+              </option>
+            ))}
+          </select>
+        </div>
+        {books.oldTestament.length === 0 && books.newTestament.length === 0 && (
+          <p className="error-message">No Bible data available.</p>
+        )}
+        <div className={`book-lists ${selectedBook ? "fade-out" : "fade-in"}`}>
+          <div className="testament-section">
+            <h2 className="testament-title">Old Testament</h2>
+            <BookList books={books.oldTestament} onSelect={handleBookSelect} />
+          </div>
+          <div className="testament-section">
+            <h2 className="testament-title">New Testament</h2>
+            <BookList books={books.newTestament} onSelect={handleBookSelect} />
           </div>
         </div>
-      )}
-    </Authenticator>
+        {selectedBook && (
+          <div className={`chapter-content ${selectedBook ? "fade-in" : "fade-out"}`}>
+            <button className="back-button" onClick={handleBack}>
+              Back to {selectedChapter ? "Chapters" : "Books"}
+            </button>
+            {selectedChapter ? (
+              <ChapterView
+                book={selectedBook}
+                chapter={selectedChapter}
+                verses={verses}
+              />
+            ) : (
+              <ChapterList
+                book={selectedBook}
+                verses={verses}
+                onSelectChapter={handleChapterSelect}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

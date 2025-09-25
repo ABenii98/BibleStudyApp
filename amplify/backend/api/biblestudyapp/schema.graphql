@@ -1,0 +1,10 @@
+type User @model @auth(rules: [{ allow: owner, ownerField: "id" }]) {
+  id: ID!  # Set to Cognito sub
+  email: AWSEmail!
+  firstName: String!
+  lastName: String!
+  birthday: AWSDate!
+  photoPath: String
+  bio: String
+  xP: Int! @default(value: "0")
+}

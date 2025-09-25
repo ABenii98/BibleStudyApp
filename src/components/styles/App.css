@@ -5,8 +5,10 @@
   justify-content: flex-start;
   align-items: center;
   background: linear-gradient(135deg, #87CEEB, #E0F6FF, #B0E0E6);
-  padding: 20px;
+  padding: 20px 20px 20px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  padding-top: 80px; /* Offset for fixed navbar */
 }
 
 .content-wrapper {
@@ -22,6 +24,7 @@
   flex-direction: column;
   margin: 0 auto;
   min-height: 0;
+  position: relative;
 }
 
 .main-title {
@@ -78,7 +81,7 @@
   letter-spacing: 1px;
 }
 
-.back-button, .sign-out-button {
+.back-button {
   display: inline-block;
   margin: 0 0 0.5rem 0;
   padding: 8px 16px;
@@ -92,7 +95,7 @@
   transition: background 0.3s, transform 0.2s;
 }
 
-.back-button:hover, .sign-out-button:hover {
+.back-button:hover {
   background: #e6f0fa;
   transform: translateY(-2px);
 }
@@ -126,6 +129,29 @@
   background: #e6f0fa;
 }
 
+.profile-link {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #87CEEB;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 1em;
+  color: #ffffff;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.profile-link:hover {
+  background-color: #6bb8e3;
+  transform: scale(1.1);
+}
+
 @media (max-width: 768px) {
   .content-wrapper {
     padding: 1rem;
@@ -135,5 +161,12 @@
   }
   .testament-title {
     font-size: 1.2em;
+  }
+  .profile-link {
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 0.9em;
   }
 }

@@ -1,158 +1,190 @@
 /* Styling for Amplify Authenticator to match Bible app */
-.amplify-authenticator {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #87CEEB, #E0F6FF, #B0E0E6);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+   .amplify-authenticator {
+     min-height: 100vh;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     background: linear-gradient(135deg, #87CEEB, #E0F6FF, #B0E0E6);
+     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     position: relative;
+   }
 
-.amplify-tabs {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 3rem; /* Increased padding for larger area */
-  width: 100%;
-  max-width: 600px; /* Increased max-width for bigger sign-in area */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+   .amplify-tabs {
+     background: rgba(255, 255, 255, 0.2);
+     backdrop-filter: blur(10px);
+     border-radius: 15px;
+     padding: 3rem;
+     width: 100%;
+     max-width: 600px;
+     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+     text-align: center;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     position: relative;
+   }
 
-.amplify-tabs-item {
-  padding: 10px 20px;
-  margin: 0 10px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  color: #1a2a44;
-  font-weight: 500;
-  transition: background 0.3s, color 0.3s;
-}
+   .amplify-tabs-item {
+     padding: 10px 20px;
+     margin: 0 10px;
+     background: rgba(255, 255, 255, 0.3);
+     border-radius: 8px;
+     color: #1a2a44;
+     font-weight: 500;
+     transition: background 0.3s, color 0.3s;
+   }
 
-.amplify-tabs-item:hover,
-.amplify-tabs-item[aria-selected="true"] {
-  background: #87CEEB;
-  color: #ffffff;
-}
+   .amplify-tabs-item:hover,
+   .amplify-tabs-item[aria-selected="true"] {
+     background: #87CEEB;
+     color: #ffffff;
+   }
 
-.amplify-heading {
-  font-size: 2em;
-  color: #ffffff;
-  margin-bottom: 1.5rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  display: none; /* Hide default heading */
-}
+   .amplify-heading {
+     font-size: 2em;
+     color: #ffffff;
+     margin-bottom: 1.5rem;
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+     display: none;
+   }
 
-/* Custom title */
-.amplify-authenticator::before {
-  content: "Bible Study App";
-  font-weight: bold;
-  font-size: 2.8em; /* Slightly larger title */
-  color: #ffffff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  margin-bottom: 2rem; /* More spacing below title */
-}
+   /* Custom title */
+   .amplify-authenticator::before {
+     content: "Bible Study App";
+     font-weight: bold;
+     font-size: 2.8em;
+     color: #ffffff;
+     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+     margin-bottom: 2rem;
+   }
 
-.amplify-field {
-  margin-bottom: 1.5rem; /* Increased spacing between fields */
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
+   .amplify-field {
+     margin-bottom: 1.5rem;
+     width: 100%;
+     display: flex;
+     justify-content: center;
+   }
 
-.amplify-label {
-  font-size: 1.2em; /* Slightly larger label */
-  color: #1a2a44;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
+   .amplify-label {
+     font-size: 1.2em;
+     color: #1a2a44;
+     text-align: center;
+     margin-bottom: 0.5rem;
+   }
 
-.amplify-input {
-  padding: 8px 12px; /* Adjusted for better fit */
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1em;
-  color: #1a2a44;
-  width: 70%; /* Adjusted width for balance */
-  box-sizing: border-box;
-  margin: 0 auto;
-  display: block; /* Ensure centering */
-}
+   .amplify-input {
+     padding: 8px 12px;
+     background: rgba(255, 255, 255, 0.9);
+     border: 1px solid rgba(0, 0, 0, 0.1);
+     border-radius: 8px;
+     font-family: 'Inter', sans-serif;
+     font-size: 1em;
+     color: #1a2a44;
+     width: 70%;
+     box-sizing: border-box;
+     margin: 0 auto;
+     display: block;
+   }
 
-.amplify-input:focus {
-  outline: none;
-  border-color: #87CEEB;
-  box-shadow: 0 0 5px rgba(135, 206, 235, 0.5);
-}
+   .amplify-input:focus {
+     outline: none;
+     border-color: #87CEEB;
+     box-shadow: 0 0 5px rgba(135, 206, 235, 0.5);
+   }
 
-.amplify-button {
-  padding: 10px 24px; /* Slightly larger button */
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1.1em; /* Larger text */
-  color: #1a2a44;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  margin: 0.75rem 0;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
+   .amplify-button {
+     padding: 10px 24px;
+     background: rgba(255, 255, 255, 0.9);
+     border: 1px solid rgba(0, 0, 0, 0.1);
+     border-radius: 8px;
+     font-family: 'Inter', sans-serif;
+     font-size: 1.1em;
+     color: #1a2a44;
+     cursor: pointer;
+     transition: background 0.3s, transform 0.2s;
+     margin: 0.75rem 0;
+     display: block;
+     margin-left: auto;
+     margin-right: auto;
+   }
 
-.amplify-button:hover {
-  background: #e6f0fa;
-  transform: translateY(-2px);
-}
+   .amplify-button:hover {
+     background: #e6f0fa;
+     transform: translateY(-2px);
+   }
 
-.amplify-button[data-variation="primary"] {
-  background: #87CEEB;
-  color: #ffffff;
-  border: none;
-}
+   .amplify-button[data-variation="primary"] {
+     background: #87CEEB;
+     color: #ffffff;
+     border: none;
+   }
 
-.amplify-button[data-variation="primary"]:hover {
-  background: #6bb8e3;
-  transform: translateY(-2px);
-}
+   .amplify-button[data-variation="primary"]:hover {
+     background: #6bb8e3;
+     transform: translateY(-2px);
+   }
 
-.amplify-text {
-  color: #1a2a44;
-  font-size: 1em; /* Slightly larger text */
-  text-align: center;
-  margin-top: 1rem;
-}
+   .amplify-text {
+     color: #1a2a44;
+     font-size: 1em;
+     text-align: center;
+     margin-top: 1rem;
+   }
 
-.amplify-alert {
-  color: #d32f2f;
-  font-size: 1.1em;
-  margin: 1.5rem 0;
-  text-align: center;
-}
+   .amplify-alert {
+     color: #d32f2f;
+     font-size: 1.1em;
+     margin: 1.5rem 0;
+     text-align: center;
+   }
 
-@media (max-width: 768px) {
-  .amplify-tabs {
-    padding: 2rem;
-    max-width: 90%;
-  }
-  .amplify-authenticator::before {
-    font-size: 2.2em; /* Adjusted for mobile */
-  }
-  .amplify-label {
-    font-size: 1.1em;
-  }
-  .amplify-input {
-    font-size: 0.9em;
-    width: 80%; /* Adjusted for smaller screens */
-  }
-  .amplify-button {
-    font-size: 1em;
-  }
-}
+   .profile-link {
+     position: absolute;
+     top: 20px;
+     left: 20px;
+     width: 50px;
+     height: 50px;
+     background-color: #87CEEB;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     text-decoration: none;
+     font-family: 'Inter', sans-serif;
+     font-size: 1em;
+     color: #ffffff;
+     transition: background-color 0.3s, transform 0.2s;
+   }
+
+   .profile-link:hover {
+     background-color: #6bb8e3;
+     transform: scale(1.1);
+   }
+
+   @media (max-width: 768px) {
+     .amplify-tabs {
+       padding: 2rem;
+       max-width: 90%;
+     }
+     .amplify-authenticator::before {
+       font-size: 2.2em;
+     }
+     .amplify-label {
+       font-size: 1.1em;
+     }
+     .amplify-input {
+       font-size: 0.9em;
+       width: 80%;
+     }
+     .amplify-button {
+       font-size: 1em;
+     }
+     .profile-link {
+       top: 10px;
+       left: 10px;
+       width: 40px;
+       height: 40px;
+       font-size: 0.9em;
+     }
+   }

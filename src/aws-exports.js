@@ -27,7 +27,10 @@ const awsmobile = {
         "EMAIL"
     ],
     "aws_user_files_s3_bucket": "biblestudybibleversionsee64d-master",
-    "aws_user_files_s3_bucket_region": "us-east-1"
+    "aws_user_files_s3_bucket_region": "us-east-1",
+    "aws_appsync_graphqlEndpoint": "https://nhaxtaxs2fa75l26jxvovfyiou.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_region": "us-east-1",
+    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS"
 };
 
 
