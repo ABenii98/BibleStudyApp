@@ -3,12 +3,14 @@ import BookList from "./components/BookList.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterView from "./components/ChapterView.jsx";
 import { Storage } from "aws-amplify";
+import { get, set } from "idb-keyval"; // ✅ IndexedDB helper
 import "./components/styles/App.css";
 
 function App({ signOut, user }) {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [verses, setVerses] = useState([]);
+  const [bibleCache, setBibleCache] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,26 +21,62 @@ function App({ signOut, user }) {
   const bibleVersions = ["KJV", "ASV"];
 
   useEffect(() => {
-    setLoading(true);
-    async function fetchBible() {
+    async function loadBible() {
+      setLoading(true);
+      setError(null);
+
       try {
+        const cacheKey = `bible_${selectedVersion}`;
+
+        // ✅ Step 1: Memory Cache
+        if (bibleCache[selectedVersion]) {
+          console.log(`✅ Loaded ${selectedVersion} from memory`);
+          setVerses(bibleCache[selectedVersion]);
+          setLoading(false);
+          return;
+        }
+
+        // ✅ Step 2: IndexedDB Cache
+        const cachedBible = await get(cacheKey);
+        if (cachedBible) {
+          console.log(`📖 Loaded ${selectedVersion} from IndexedDB`);
+          setVerses(cachedBible);
+          setBibleCache((prev) => ({ ...prev, [selectedVersion]: cachedBible }));
+          setLoading(false);
+          return;
+        }
+
+        // ✅ Step 3: Fetch from CloudFront/S3
+        console.log(`🌍 Fetching ${selectedVersion} from S3/CloudFront...`);
         const bibleUrl = await Storage.get(
           `bibles/${selectedVersion.toLowerCase()}.json`,
           { level: "public" }
         );
-        const res = await fetch(bibleUrl, { headers: { Accept: "application/json" } });
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error("Invalid JSON structure");
+
+        const response = await fetch(bibleUrl, {
+          headers: { Accept: "application/json" },
+          cache: "force-cache"
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Invalid Bible JSON structure");
+
+        // ✅ Step 4: Save to memory + IndexedDB
+        await set(cacheKey, data);
+        setBibleCache((prev) => ({ ...prev, [selectedVersion]: data }));
         setVerses(data);
-        setLoading(false);
+        console.log(`💾 Cached ${selectedVersion} in IndexedDB & memory`);
+
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("❌ Error loading Bible:", err);
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     }
-    fetchBible();
+
+    loadBible();
   }, [selectedVersion]);
 
   useEffect(() => {
@@ -46,20 +84,15 @@ function App({ signOut, user }) {
   }, [selectedVersion]);
 
   const bookOrder = [
-    "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
-    "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
-    "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
-    "Ezra", "Nehemiah", "Esther", "Job", "Psalms",
-    "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah",
-    "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea",
-    "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum",
-    "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
-    "Matthew", "Mark", "Luke", "John", "Acts",
-    "Romans", "1 Corinthians", "2 Corinthians", "Galatians",
-    "Ephesians", "Philippians", "Colossians", "1 Thessalonians",
-    "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
-    "Philemon", "Hebrews", "James", "1 Peter", "2 Peter",
-    "1 John", "2 John", "3 John", "Jude", "Revelation"
+    "Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth",
+    "1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
+    "Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon",
+    "Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos",
+    "Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah",
+    "Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians",
+    "2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
+    "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
+    "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
   ];
 
   const books = useMemo(() => {
@@ -72,47 +105,37 @@ function App({ signOut, user }) {
     };
   }, [verses]);
 
-  const handleBookSelect = (book) => {
-    setSelectedBook(book);
-    setSelectedChapter(null);
-  };
-
-  const handleChapterSelect = (chapter) => {
-    setSelectedChapter(chapter);
-  };
-
+  const handleBookSelect = (book) => setSelectedBook(book);
+  const handleChapterSelect = (chapter) => setSelectedChapter(chapter);
   const handleBack = () => {
     if (selectedChapter) setSelectedChapter(null);
     else if (selectedBook) setSelectedBook(null);
   };
-
   const handleVersionChange = (e) => {
     setSelectedVersion(e.target.value);
     setSelectedBook(null);
     setSelectedChapter(null);
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="app-container">
         <div className="content-wrapper">
           <h1 className="main-title">LightHouse</h1>
-          <p className="error-message">Loading Bible data...</p>
+          <p className="error-message">Loading {selectedVersion} Bible...</p>
         </div>
       </div>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <div className="app-container">
         <div className="content-wrapper">
           <h1 className="main-title">LightHouse</h1>
-          <p className="error-message">Error loading Bible data: {error}</p>
+          <p className="error-message">Error loading Bible: {error}</p>
         </div>
       </div>
     );
-  }
 
   return (
     <div className="app-container">
@@ -132,30 +155,25 @@ function App({ signOut, user }) {
             ))}
           </select>
         </div>
-        {books.oldTestament.length === 0 && books.newTestament.length === 0 && (
-          <p className="error-message">No Bible data available.</p>
-        )}
+
         <div className={`book-lists ${selectedBook ? "fade-out" : "fade-in"}`}>
           <div className="testament-section">
             <h2 className="testament-title">Old Testament</h2>
-            <BookList books={books.oldTestament} onSelect={handleBookSelect} />
+            <BookList books={books.oldTestament} onSelect={setSelectedBook} />
           </div>
           <div className="testament-section">
             <h2 className="testament-title">New Testament</h2>
-            <BookList books={books.newTestament} onSelect={handleBookSelect} />
+            <BookList books={books.newTestament} onSelect={setSelectedBook} />
           </div>
         </div>
+
         {selectedBook && (
-          <div className={`chapter-content ${selectedBook ? "fade-in" : "fade-out"}`}>
+          <div className="chapter-content">
             <button className="back-button" onClick={handleBack}>
               Back to {selectedChapter ? "Chapters" : "Books"}
             </button>
             {selectedChapter ? (
-              <ChapterView
-                book={selectedBook}
-                chapter={selectedChapter}
-                verses={verses}
-              />
+              <ChapterView book={selectedBook} chapter={selectedChapter} verses={verses} />
             ) : (
               <ChapterList
                 book={selectedBook}

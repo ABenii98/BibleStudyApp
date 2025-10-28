@@ -20,6 +20,9 @@
       },
       "api": {
         "biblestudyapp": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
       }
     }
   }

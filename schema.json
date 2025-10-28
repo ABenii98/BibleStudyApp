@@ -1,0 +1,29 @@
+type User 
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "id" }]) {
+  id: ID!
+  email: AWSEmail!
+  firstName: String!
+  lastName: String!
+  birthday: AWSDate!
+  photoPath: String
+  bio: String
+  xP: Int! @default(value: "0")
+}
+
+type Verse
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] },
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  pk: String!
+  sk: Int!
+  book: String!
+  chapter: Int!
+  verse: Int!
+  text: String!
+  version: String
+}

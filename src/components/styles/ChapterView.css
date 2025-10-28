@@ -1,71 +1,277 @@
-/* Chapter view styling */
-   .chapter-view {
-     margin-top: 1rem;
-   }
+/* components/styles/ChapterView.css */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap');
 
-   .chapter-title {
-     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-     font-weight: 600;
-     font-size: 1.8em;
-     color: #1a2a44;
-     margin: 1.5rem 0 1rem;
-     text-align: center;
-   }
+/* Reset & Base */
+.chapter-view {
+  padding: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
-   .verse {
-     margin-bottom: 1.2rem;
-     line-height: 1.8;
-     font-size: 1.1em;
-     color: #333;
-     font-family: Verdana, Geneva, Tahoma, sans-serif;
-   }
+.error-message {
+  background: #ffe6e6;
+  border: 1px solid #ff4d4d;
+  color: #c00;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
 
-   .verse-number {
-     font-weight: 600;
-     color: #1a2a44;
-     margin-right: 0.5em;
-   }
+/* Title */
+.chapter-view h2 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  color: #1a2a44;
+}
 
-   /* Responsive adjustments */
-   @media (max-width: 768px) {
-     .chapter-title {
-       font-size: 1.5em;
-     }
+/* Verse Container */
+.verse-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-     .verse {
-       font-size: 1em;
-     }
-   }
+/* Verse Wrapper */
+.verse-wrapper {
+  position: relative;
+}
 
-   .profile-link {
-     position: absolute;
-     top: 20px;
-     left: 20px;
-     width: 50px;
-     height: 50px;
-     background-color: #87CEEB;
-     border-radius: 50%;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     text-decoration: none;
-     font-family: 'Inter', sans-serif;
-     font-size: 1em;
-     color: #ffffff;
-     transition: background-color 0.3s, transform 0.2s;
-   }
+/* Verse Text */
+.verse {
+  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  margin: 0;
+}
 
-   .profile-link:hover {
-     background-color: #6bb8e3;
-     transform: scale(1.1);
-   }
+.verse:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 
-   @media (max-width: 768px) {
-     .profile-link {
-       top: 10px;
-       left: 10px;
-       width: 40px;
-       height: 40px;
-       font-size: 0.9em;
-     }
-   }
+.verse-number {
+  font-weight: 600;
+  color: #1a2a44;
+  margin-right: 0.5em;
+}
+
+/* Highlighted Verse */
+.highlighted {
+  padding: 0.6rem 0.9rem;
+  margin: 0.2rem 0;
+}
+
+/* Has Comment Indicator */
+.has-comment::after {
+  content: "Note";
+  font-size: 0.7em;
+  margin-left: 0.5em;
+  color: #666;
+  font-style: italic;
+}
+
+/* Bookmark Icon (Flaticon) */
+.bookmark-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 0.5em;
+  background: url('/public/Bookicon.png') no-repeat center;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+/* ==================== RENDERED COMMENTS ==================== */
+.comment-container {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
+}
+
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  position: relative;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-text {
+  flex: 1;
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: #1a73e8;
+  line-height: 1.45;
+  padding-right: 2.2rem;
+  word-wrap: break-word;
+}
+
+/* Trash Can Icon (Flaticon) - Hidden by default */
+.delete-comment-btn {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: url('https://cdn-icons-png.flaticon.com/32/484/484662.png') no-repeat center;
+  background-size: 18px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* Show trash can on hover */
+.comment-item:hover .delete-comment-btn {
+  opacity: 1;
+}
+
+.delete-comment-btn:hover {
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+/* ==================== UNIFIED ACTION MODAL ==================== */
+.action-modal {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 1rem;
+  width: 340px;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-top: 0.5rem;
+}
+
+/* Bookmark Toggle (Ribbon) - Top Right */
+.bookmark-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  background: url('/public/Bookicon.png') center/contain no-repeat;
+  background-size: 20px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.bookmark-toggle.bookmarked {
+  opacity: 1;
+  background-color: rgba(212, 160, 23, 0.15);
+  transform: scale(1.1);
+}
+
+.bookmark-toggle:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Color Palette */
+.color-section {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #ccc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px #1a2a44;
+}
+
+.color-swatch.remove {
+  background: #f5f5f5 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #999;
+  font-weight: bold;
+}
+
+/* Comment Input Section */
+.comment-section {
+  margin-top: 0.5rem;
+}
+
+.comment-section textarea {
+  width: 100%;
+  height: 90px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  resize: none;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+.comment-section textarea:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.55rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.modal-actions .save {
+  background: #1a2a44;
+  color: white;
+}
+
+.modal-actions .save:hover {
+  background: #0f1a2d;
+}
+
+.modal-actions .cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-actions .cancel:hover {
+  background: #e0e0e0;
+}

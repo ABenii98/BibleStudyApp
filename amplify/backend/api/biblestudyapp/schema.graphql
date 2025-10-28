@@ -1,5 +1,9 @@
-type User @model @auth(rules: [{ allow: owner, ownerField: "id" }]) {
-  id: ID!  # Set to Cognito sub
+# === USER ===
+type User
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  owner: String! # Added for proper @auth
   email: AWSEmail!
   firstName: String!
   lastName: String!
@@ -7,4 +11,102 @@ type User @model @auth(rules: [{ allow: owner, ownerField: "id" }]) {
   photoPath: String
   bio: String
   xP: Int! @default(value: "0")
+  highlights: [Highlight] @hasMany(indexName: "byUser", fields: ["id"])
+  comments: [Comment] @hasMany(indexName: "byUser", fields: ["id"])
+  bookmarks: [Bookmark] @hasMany(indexName: "byUser", fields: ["id"])
+  readingProgress: ReadingProgress @hasOne(fields: ["id"])
+  studySets: [StudySet] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+# === HIGHLIGHTS ===
+type Highlight
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  book: String!
+  chapter: Int!
+  verse: Int!
+  color: String
+  note: String
+  tag: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# === COMMENTS ===
+type Comment
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  verseKey: String! @index(name: "byVerse", sortKeyFields: ["createdAt"])
+  user: User @belongsTo(fields: ["userId"])
+  book: String!
+  chapter: Int!
+  verse: Int!
+  title: String
+  body: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# === BOOKMARKS ===
+type Bookmark
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  book: String!
+  chapter: Int!
+  verse: Int!
+  label: String
+  createdAt: AWSDateTime!
+}
+
+# === READING PROGRESS ===
+type ReadingProgress
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  lastBook: String!
+  lastChapter: Int!
+  lastVerse: Int
+  streakDays: Int @default(value: "0")
+  lastReadDate: AWSDate
+  updatedAt: AWSDateTime!
+}
+
+# === STUDY SETS ===
+type StudySet
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  title: String!
+  description: String
+  color: String
+  verses: [StudySetVerse] @hasMany(indexName: "byStudySet", fields: ["id"])
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type StudySetVerse
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "studySetOwner" }]) {
+  id: ID!
+  studySetId: ID! @index(name: "byStudySet", sortKeyFields: ["createdAt"])
+  studySetOwner: String!
+  # ... other fields
+  createdAt: AWSDateTime
 }

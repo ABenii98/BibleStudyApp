@@ -28,9 +28,13 @@ const awsmobile = {
     ],
     "aws_user_files_s3_bucket": "biblestudybibleversionsee64d-master",
     "aws_user_files_s3_bucket_region": "us-east-1",
-    "aws_appsync_graphqlEndpoint": "https://nhaxtaxs2fa75l26jxvovfyiou.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_appsync_graphqlEndpoint": "https://m6mwwpjwszdf5kpzdq7loeltyi.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_appsync_region": "us-east-1",
-    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS"
+    "aws_appsync_authenticationType": "API_KEY",
+    "aws_appsync_apiKey": "da2-y3pikiulcza4die4rchngk6h3a",
+    "aws_content_delivery_bucket": "biblestudybibleversionsb606f-dev-master",
+    "aws_content_delivery_bucket_region": "us-east-1",
+    "aws_content_delivery_url": "https://d6m2wc03y50ar.cloudfront.net"
 };
 
 
