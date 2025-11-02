@@ -1,22 +1,62 @@
-import React from 'react';
-import './styles/SocialHub.css';
+// src/components/SocialHub.jsx
+import React, { useState, useEffect } from "react";
+import { API } from "aws-amplify";
+import { gql } from "graphql-tag";
 
-const SocialHub = () => {
+const SocialHub = ({ user }) => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (!user) return;
+
+      try {
+        const response = await API.graphql({
+          query: gql`
+            query ListPosts {
+              listPosts {
+                items {
+                  id
+                  content
+                  likes
+                  createdAt
+                  user {
+                    firstName
+                    photoPath
+                  }
+                }
+              }
+            }
+          `,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+        });
+
+        setPosts(response.data?.listPosts?.items || []);
+      } catch (err) {
+        console.error("SocialHub error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
+
+  if (loading) return <p>Loading feed...</p>;
+
   return (
-    <div className="social-hub-container">
-      <h1 className="social-title">Social Hub</h1>
-      <div className="social-content">
-        <div className="friend-list">
-          <h2>Friends</h2>
-          <p>User1, User2, User3 (Add your friends here!)</p>
+    <div style={{ padding: "20px" }}>
+      <h1>Social Hub</h1>
+      {posts.map(post => (
+        <div key={post.id} style={{ border: "1px solid #ddd", margin: "10px 0", padding: "10px" }}>
+          <p>
+            <strong>{post.user?.firstName || "User"}</strong>: {post.content}
+          </p>
+          <p>Likes: {post.likes}</p>
+          <small>{new Date(post.createdAt).toLocaleString()}</small>
         </div>
-        <div className="posts">
-          <h2>Recent Posts</h2>
-          <p>Post 1: Shared a favorite verse today!</p>
-          <p>Post 2: Joined a new study group.</p>
-          <p>Post 3: Looking for discussion partners.</p>
-        </div>
-      </div>
+      ))}
     </div>
   );
 };

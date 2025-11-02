@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react';
 import { Authenticator } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import { API, graphqlOperation } from 'aws-amplify';
-import { createUser } from './graphql/mutations';
+import { createUser } from './graphql/mutations.js';
 import { useNavigate } from 'react-router-dom';
 import awsmobile from "./aws-exports.js";
 import Navigation from './Navigation.jsx';

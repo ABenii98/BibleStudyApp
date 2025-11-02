@@ -25,20 +25,15 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -100,6 +95,7 @@ export const getHighlight = /* GraphQL */ `
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -123,6 +119,7 @@ export const listHighlights = /* GraphQL */ `
         color
         note
         tag
+        text
         createdAt
         updatedAt
         __typename
@@ -159,6 +156,7 @@ export const highlightsByUserIdAndCreatedAt = /* GraphQL */ `
         color
         note
         tag
+        text
         createdAt
         updatedAt
         __typename
@@ -194,6 +192,7 @@ export const getComment = /* GraphQL */ `
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -217,6 +216,7 @@ export const listComments = /* GraphQL */ `
         verse
         title
         body
+        text
         createdAt
         updatedAt
         __typename
@@ -253,6 +253,7 @@ export const commentsByUserIdAndCreatedAt = /* GraphQL */ `
         verse
         title
         body
+        text
         createdAt
         updatedAt
         __typename
@@ -289,6 +290,7 @@ export const commentsByVerseKeyAndCreatedAt = /* GraphQL */ `
         verse
         title
         body
+        text
         createdAt
         updatedAt
         __typename
@@ -322,6 +324,7 @@ export const getBookmark = /* GraphQL */ `
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
       __typename
@@ -343,6 +346,7 @@ export const listBookmarks = /* GraphQL */ `
         chapter
         verse
         label
+        text
         createdAt
         updatedAt
         __typename
@@ -377,101 +381,9 @@ export const bookmarksByUserIdAndCreatedAt = /* GraphQL */ `
         chapter
         verse
         label
+        text
         createdAt
         updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getReadingProgress = /* GraphQL */ `
-  query GetReadingProgress($id: ID!) {
-    getReadingProgress(id: $id) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
-      __typename
-    }
-  }
-`;
-export const listReadingProgresses = /* GraphQL */ `
-  query ListReadingProgresses(
-    $filter: ModelReadingProgressFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listReadingProgresses(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const readingProgressesByUserId = /* GraphQL */ `
-  query ReadingProgressesByUserId(
-    $userId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelReadingProgressFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    readingProgressesByUserId(
-      userId: $userId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
         __typename
       }
       nextToken
@@ -574,6 +486,11 @@ export const getStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
       createdAt
       updatedAt
       __typename
@@ -591,6 +508,11 @@ export const listStudySetVerses = /* GraphQL */ `
         id
         studySetId
         studySetOwner
+        book
+        chapter
+        verse
+        note
+        text
         createdAt
         updatedAt
         __typename
@@ -621,6 +543,353 @@ export const studySetVersesByStudySetIdAndCreatedAt = /* GraphQL */ `
         id
         studySetId
         studySetOwner
+        book
+        chapter
+        verse
+        note
+        text
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPost = /* GraphQL */ `
+  query GetPost($id: ID!) {
+    getPost(id: $id) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPosts = /* GraphQL */ `
+  query ListPosts(
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        owner
+        content
+        verseRef
+        mediaUrl
+        likes
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const postsByUserIdAndCreatedAt = /* GraphQL */ `
+  query PostsByUserIdAndCreatedAt(
+    $userId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postsByUserIdAndCreatedAt(
+      userId: $userId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        owner
+        content
+        verseRef
+        mediaUrl
+        likes
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPostComment = /* GraphQL */ `
+  query GetPostComment($id: ID!) {
+    getPostComment(id: $id) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPostComments = /* GraphQL */ `
+  query ListPostComments(
+    $filter: ModelPostCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPostComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        postId
+        userId
+        owner
+        content
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const postCommentsByPostIdAndCreatedAt = /* GraphQL */ `
+  query PostCommentsByPostIdAndCreatedAt(
+    $postId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postCommentsByPostIdAndCreatedAt(
+      postId: $postId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        postId
+        userId
+        owner
+        content
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const postCommentsByUserIdAndCreatedAt = /* GraphQL */ `
+  query PostCommentsByUserIdAndCreatedAt(
+    $userId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postCommentsByUserIdAndCreatedAt(
+      userId: $userId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        postId
+        userId
+        owner
+        content
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getFriendship = /* GraphQL */ `
+  query GetFriendship($id: ID!) {
+    getFriendship(id: $id) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listFriendships = /* GraphQL */ `
+  query ListFriendships(
+    $filter: ModelFriendshipFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFriendships(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        owner
+        friendId
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const friendshipsByUserIdAndCreatedAt = /* GraphQL */ `
+  query FriendshipsByUserIdAndCreatedAt(
+    $userId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelFriendshipFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    friendshipsByUserIdAndCreatedAt(
+      userId: $userId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        owner
+        friendId
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getSharedStudySet = /* GraphQL */ `
+  query GetSharedStudySet($id: ID!) {
+    getSharedStudySet(id: $id) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listSharedStudySets = /* GraphQL */ `
+  query ListSharedStudySets(
+    $filter: ModelSharedStudySetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSharedStudySets(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        studySetId
+        sharedWithUserId
+        owner
+        permissions
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const sharedStudySetsByStudySetIdAndSharedWithUserId = /* GraphQL */ `
+  query SharedStudySetsByStudySetIdAndSharedWithUserId(
+    $studySetId: ID!
+    $sharedWithUserId: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelSharedStudySetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    sharedStudySetsByStudySetIdAndSharedWithUserId(
+      studySetId: $studySetId
+      sharedWithUserId: $sharedWithUserId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        studySetId
+        sharedWithUserId
+        owner
+        permissions
         createdAt
         updatedAt
         __typename

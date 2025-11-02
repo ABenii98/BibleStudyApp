@@ -1,52 +1,69 @@
-.social-hub-container {
-  min-height: 100vh;
-  padding: 80px 20px 20px;
-  background: linear-gradient(135deg, #87CEEB, #E0F6FF, #B0E0E6);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  text-align: center;
-}
-
-.social-title {
-  font-size: 2.5em;
-  color: #ffffff;
-  margin-bottom: 1.5rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.social-content {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 2rem;
+.socialhub-container {
   max-width: 800px;
-  margin: 0 auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.friend-list, .posts {
-  margin-bottom: 2rem;
+.socialhub-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
 }
 
-.friend-list h2, .posts h2 {
-  font-size: 1.5em;
-  color: #1a2a44;
-  margin-bottom: 1rem;
+.socialhub-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
 }
 
-.friend-list p, .posts p {
-  font-size: 1.1em;
-  color: #333;
-  line-height: 1.6;
+.socialhub-textarea {
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-height: 80px;
+  margin-bottom: 0.5rem;
+  resize: vertical;
 }
 
-@media (max-width: 768px) {
-  .social-title {
-    font-size: 2em;
-  }
-  .social-content {
-    padding: 1rem;
-  }
-  .friend-list h2, .posts h2 {
-    font-size: 1.2em;
-  }
+.socialhub-button {
+  background: #2b7a78;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.socialhub-button:hover {
+  background: #3aafa9;
+}
+
+.socialhub-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.socialhub-post {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.socialhub-post-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.socialhub-content {
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }

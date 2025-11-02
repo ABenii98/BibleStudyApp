@@ -28,20 +28,15 @@ export const createUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -78,20 +73,15 @@ export const updateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -128,20 +118,15 @@ export const deleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -160,26 +145,13 @@ export const createHighlight = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -195,26 +167,13 @@ export const updateHighlight = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -230,26 +189,13 @@ export const deleteHighlight = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -266,25 +212,12 @@ export const createComment = /* GraphQL */ `
       userId
       owner
       verseKey
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -301,25 +234,12 @@ export const updateComment = /* GraphQL */ `
       userId
       owner
       verseKey
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -336,25 +256,12 @@ export const deleteComment = /* GraphQL */ `
       userId
       owner
       verseKey
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -370,24 +277,11 @@ export const createBookmark = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
       __typename
@@ -403,24 +297,11 @@ export const updateBookmark = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
       __typename
@@ -436,128 +317,13 @@ export const deleteBookmark = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       book
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
-      __typename
-    }
-  }
-`;
-export const createReadingProgress = /* GraphQL */ `
-  mutation CreateReadingProgress(
-    $input: CreateReadingProgressInput!
-    $condition: ModelReadingProgressConditionInput
-  ) {
-    createReadingProgress(input: $input, condition: $condition) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
-      __typename
-    }
-  }
-`;
-export const updateReadingProgress = /* GraphQL */ `
-  mutation UpdateReadingProgress(
-    $input: UpdateReadingProgressInput!
-    $condition: ModelReadingProgressConditionInput
-  ) {
-    updateReadingProgress(input: $input, condition: $condition) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
-      __typename
-    }
-  }
-`;
-export const deleteReadingProgress = /* GraphQL */ `
-  mutation DeleteReadingProgress(
-    $input: DeleteReadingProgressInput!
-    $condition: ModelReadingProgressConditionInput
-  ) {
-    deleteReadingProgress(input: $input, condition: $condition) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
       __typename
     }
   }
@@ -571,20 +337,6 @@ export const createStudySet = /* GraphQL */ `
       id
       userId
       owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
       title
       description
       color
@@ -679,6 +431,11 @@ export const createStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
       createdAt
       updatedAt
       __typename
@@ -694,6 +451,11 @@ export const updateStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
       createdAt
       updatedAt
       __typename
@@ -709,6 +471,317 @@ export const deleteStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPost = /* GraphQL */ `
+  mutation CreatePost(
+    $input: CreatePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    createPost(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePost = /* GraphQL */ `
+  mutation UpdatePost(
+    $input: UpdatePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    updatePost(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePost = /* GraphQL */ `
+  mutation DeletePost(
+    $input: DeletePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    deletePost(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPostComment = /* GraphQL */ `
+  mutation CreatePostComment(
+    $input: CreatePostCommentInput!
+    $condition: ModelPostCommentConditionInput
+  ) {
+    createPostComment(input: $input, condition: $condition) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePostComment = /* GraphQL */ `
+  mutation UpdatePostComment(
+    $input: UpdatePostCommentInput!
+    $condition: ModelPostCommentConditionInput
+  ) {
+    updatePostComment(input: $input, condition: $condition) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePostComment = /* GraphQL */ `
+  mutation DeletePostComment(
+    $input: DeletePostCommentInput!
+    $condition: ModelPostCommentConditionInput
+  ) {
+    deletePostComment(input: $input, condition: $condition) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createFriendship = /* GraphQL */ `
+  mutation CreateFriendship(
+    $input: CreateFriendshipInput!
+    $condition: ModelFriendshipConditionInput
+  ) {
+    createFriendship(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateFriendship = /* GraphQL */ `
+  mutation UpdateFriendship(
+    $input: UpdateFriendshipInput!
+    $condition: ModelFriendshipConditionInput
+  ) {
+    updateFriendship(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteFriendship = /* GraphQL */ `
+  mutation DeleteFriendship(
+    $input: DeleteFriendshipInput!
+    $condition: ModelFriendshipConditionInput
+  ) {
+    deleteFriendship(input: $input, condition: $condition) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createSharedStudySet = /* GraphQL */ `
+  mutation CreateSharedStudySet(
+    $input: CreateSharedStudySetInput!
+    $condition: ModelSharedStudySetConditionInput
+  ) {
+    createSharedStudySet(input: $input, condition: $condition) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateSharedStudySet = /* GraphQL */ `
+  mutation UpdateSharedStudySet(
+    $input: UpdateSharedStudySetInput!
+    $condition: ModelSharedStudySetConditionInput
+  ) {
+    updateSharedStudySet(input: $input, condition: $condition) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteSharedStudySet = /* GraphQL */ `
+  mutation DeleteSharedStudySet(
+    $input: DeleteSharedStudySetInput!
+    $condition: ModelSharedStudySetConditionInput
+  ) {
+    deleteSharedStudySet(input: $input, condition: $condition) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
       createdAt
       updatedAt
       __typename

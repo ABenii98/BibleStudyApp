@@ -1,9 +1,10 @@
+// src/App.js
 import React, { useState, useMemo, useEffect } from "react";
 import BookList from "./components/BookList.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterView from "./components/ChapterView.jsx";
 import { Storage } from "aws-amplify";
-import { get, set } from "idb-keyval"; // ✅ IndexedDB helper
+import { get, set } from "idb-keyval";
 import "./components/styles/App.css";
 
 function App({ signOut, user }) {
@@ -20,6 +21,7 @@ function App({ signOut, user }) {
 
   const bibleVersions = ["KJV", "ASV"];
 
+  // Bible loading logic
   useEffect(() => {
     async function loadBible() {
       setLoading(true);
@@ -28,26 +30,26 @@ function App({ signOut, user }) {
       try {
         const cacheKey = `bible_${selectedVersion}`;
 
-        // ✅ Step 1: Memory Cache
+        // Memory cache
         if (bibleCache[selectedVersion]) {
-          console.log(`✅ Loaded ${selectedVersion} from memory`);
+          console.log(`Loaded ${selectedVersion} from memory`);
           setVerses(bibleCache[selectedVersion]);
           setLoading(false);
           return;
         }
 
-        // ✅ Step 2: IndexedDB Cache
+        // IndexedDB cache
         const cachedBible = await get(cacheKey);
         if (cachedBible) {
-          console.log(`📖 Loaded ${selectedVersion} from IndexedDB`);
+          console.log(`Loaded ${selectedVersion} from IndexedDB`);
           setVerses(cachedBible);
           setBibleCache((prev) => ({ ...prev, [selectedVersion]: cachedBible }));
           setLoading(false);
           return;
         }
 
-        // ✅ Step 3: Fetch from CloudFront/S3
-        console.log(`🌍 Fetching ${selectedVersion} from S3/CloudFront...`);
+        // S3/CloudFront fetch
+        console.log(`Fetching ${selectedVersion} from S3/CloudFront...`);
         const bibleUrl = await Storage.get(
           `bibles/${selectedVersion.toLowerCase()}.json`,
           { level: "public" }
@@ -55,21 +57,21 @@ function App({ signOut, user }) {
 
         const response = await fetch(bibleUrl, {
           headers: { Accept: "application/json" },
-          cache: "force-cache"
+          cache: "force-cache",
         });
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        if (!Array.isArray(data)) throw new Error("Invalid Bible JSON structure");
+        if (!Array.isArray(data))
+          throw new Error("Invalid Bible JSON structure");
 
-        // ✅ Step 4: Save to memory + IndexedDB
         await set(cacheKey, data);
         setBibleCache((prev) => ({ ...prev, [selectedVersion]: data }));
         setVerses(data);
-        console.log(`💾 Cached ${selectedVersion} in IndexedDB & memory`);
-
+        console.log(`Cached ${selectedVersion} in IndexedDB & memory`);
       } catch (err) {
-        console.error("❌ Error loading Bible:", err);
+        console.error("Error loading Bible:", err);
         setError(err.message);
       } finally {
         setLoading(false);

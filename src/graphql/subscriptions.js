@@ -28,20 +28,15 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -78,20 +73,15 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -128,20 +118,15 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      readingProgress {
-        id
-        userId
-        owner
-        lastBook
-        lastChapter
-        lastVerse
-        streakDays
-        lastReadDate
-        updatedAt
-        createdAt
+      studySets {
+        nextToken
         __typename
       }
-      studySets {
+      posts {
+        nextToken
+        __typename
+      }
+      postComments {
         nextToken
         __typename
       }
@@ -180,6 +165,7 @@ export const onCreateHighlight = /* GraphQL */ `
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -215,6 +201,7 @@ export const onUpdateHighlight = /* GraphQL */ `
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -250,6 +237,7 @@ export const onDeleteHighlight = /* GraphQL */ `
       color
       note
       tag
+      text
       createdAt
       updatedAt
       __typename
@@ -285,6 +273,7 @@ export const onCreateComment = /* GraphQL */ `
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -320,6 +309,7 @@ export const onUpdateComment = /* GraphQL */ `
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -355,6 +345,7 @@ export const onDeleteComment = /* GraphQL */ `
       verse
       title
       body
+      text
       createdAt
       updatedAt
       __typename
@@ -388,6 +379,7 @@ export const onCreateBookmark = /* GraphQL */ `
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
       __typename
@@ -421,6 +413,7 @@ export const onUpdateBookmark = /* GraphQL */ `
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
       __typename
@@ -454,110 +447,9 @@ export const onDeleteBookmark = /* GraphQL */ `
       chapter
       verse
       label
+      text
       createdAt
       updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateReadingProgress = /* GraphQL */ `
-  subscription OnCreateReadingProgress(
-    $filter: ModelSubscriptionReadingProgressFilterInput
-    $owner: String
-  ) {
-    onCreateReadingProgress(filter: $filter, owner: $owner) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
-      __typename
-    }
-  }
-`;
-export const onUpdateReadingProgress = /* GraphQL */ `
-  subscription OnUpdateReadingProgress(
-    $filter: ModelSubscriptionReadingProgressFilterInput
-    $owner: String
-  ) {
-    onUpdateReadingProgress(filter: $filter, owner: $owner) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
-      __typename
-    }
-  }
-`;
-export const onDeleteReadingProgress = /* GraphQL */ `
-  subscription OnDeleteReadingProgress(
-    $filter: ModelSubscriptionReadingProgressFilterInput
-    $owner: String
-  ) {
-    onDeleteReadingProgress(filter: $filter, owner: $owner) {
-      id
-      userId
-      owner
-      user {
-        id
-        owner
-        email
-        firstName
-        lastName
-        birthday
-        photoPath
-        bio
-        xP
-        createdAt
-        updatedAt
-        __typename
-      }
-      lastBook
-      lastChapter
-      lastVerse
-      streakDays
-      lastReadDate
-      updatedAt
-      createdAt
       __typename
     }
   }
@@ -679,6 +571,11 @@ export const onCreateStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
       createdAt
       updatedAt
       __typename
@@ -694,6 +591,11 @@ export const onUpdateStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
       createdAt
       updatedAt
       __typename
@@ -709,6 +611,317 @@ export const onDeleteStudySetVerse = /* GraphQL */ `
       id
       studySetId
       studySetOwner
+      book
+      chapter
+      verse
+      note
+      text
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreatePost = /* GraphQL */ `
+  subscription OnCreatePost(
+    $filter: ModelSubscriptionPostFilterInput
+    $owner: String
+  ) {
+    onCreatePost(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePost = /* GraphQL */ `
+  subscription OnUpdatePost(
+    $filter: ModelSubscriptionPostFilterInput
+    $owner: String
+  ) {
+    onUpdatePost(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePost = /* GraphQL */ `
+  subscription OnDeletePost(
+    $filter: ModelSubscriptionPostFilterInput
+    $owner: String
+  ) {
+    onDeletePost(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      verseRef
+      mediaUrl
+      likes
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreatePostComment = /* GraphQL */ `
+  subscription OnCreatePostComment(
+    $filter: ModelSubscriptionPostCommentFilterInput
+    $owner: String
+  ) {
+    onCreatePostComment(filter: $filter, owner: $owner) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePostComment = /* GraphQL */ `
+  subscription OnUpdatePostComment(
+    $filter: ModelSubscriptionPostCommentFilterInput
+    $owner: String
+  ) {
+    onUpdatePostComment(filter: $filter, owner: $owner) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePostComment = /* GraphQL */ `
+  subscription OnDeletePostComment(
+    $filter: ModelSubscriptionPostCommentFilterInput
+    $owner: String
+  ) {
+    onDeletePostComment(filter: $filter, owner: $owner) {
+      id
+      postId
+      userId
+      owner
+      user {
+        id
+        owner
+        email
+        firstName
+        lastName
+        birthday
+        photoPath
+        bio
+        xP
+        createdAt
+        updatedAt
+        __typename
+      }
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateFriendship = /* GraphQL */ `
+  subscription OnCreateFriendship(
+    $filter: ModelSubscriptionFriendshipFilterInput
+    $owner: String
+  ) {
+    onCreateFriendship(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateFriendship = /* GraphQL */ `
+  subscription OnUpdateFriendship(
+    $filter: ModelSubscriptionFriendshipFilterInput
+    $owner: String
+  ) {
+    onUpdateFriendship(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteFriendship = /* GraphQL */ `
+  subscription OnDeleteFriendship(
+    $filter: ModelSubscriptionFriendshipFilterInput
+    $owner: String
+  ) {
+    onDeleteFriendship(filter: $filter, owner: $owner) {
+      id
+      userId
+      owner
+      friendId
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateSharedStudySet = /* GraphQL */ `
+  subscription OnCreateSharedStudySet(
+    $filter: ModelSubscriptionSharedStudySetFilterInput
+    $owner: String
+  ) {
+    onCreateSharedStudySet(filter: $filter, owner: $owner) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateSharedStudySet = /* GraphQL */ `
+  subscription OnUpdateSharedStudySet(
+    $filter: ModelSubscriptionSharedStudySetFilterInput
+    $owner: String
+  ) {
+    onUpdateSharedStudySet(filter: $filter, owner: $owner) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteSharedStudySet = /* GraphQL */ `
+  subscription OnDeleteSharedStudySet(
+    $filter: ModelSubscriptionSharedStudySetFilterInput
+    $owner: String
+  ) {
+    onDeleteSharedStudySet(filter: $filter, owner: $owner) {
+      id
+      studySetId
+      sharedWithUserId
+      owner
+      permissions
       createdAt
       updatedAt
       __typename

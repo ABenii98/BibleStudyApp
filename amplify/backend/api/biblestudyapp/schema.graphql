@@ -3,7 +3,7 @@ type User
   @model
   @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
   id: ID!
-  owner: String! # Added for proper @auth
+  owner: String!
   email: AWSEmail!
   firstName: String!
   lastName: String!
@@ -11,11 +11,14 @@ type User
   photoPath: String
   bio: String
   xP: Int! @default(value: "0")
+
+  # Relationships (all nullable)
   highlights: [Highlight] @hasMany(indexName: "byUser", fields: ["id"])
   comments: [Comment] @hasMany(indexName: "byUser", fields: ["id"])
   bookmarks: [Bookmark] @hasMany(indexName: "byUser", fields: ["id"])
-  readingProgress: ReadingProgress @hasOne(fields: ["id"])
   studySets: [StudySet] @hasMany(indexName: "byUser", fields: ["id"])
+  posts: [Post] @hasMany(indexName: "byUser", fields: ["id"])
+  postComments: [PostComment] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
 # === HIGHLIGHTS ===
@@ -32,6 +35,7 @@ type Highlight
   color: String
   note: String
   tag: String
+  text: String # ⬅️ NEW: store verse text for direct rendering
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -49,7 +53,8 @@ type Comment
   chapter: Int!
   verse: Int!
   title: String
-  body: String!
+  body: String
+  text: String # ⬅️ NEW: verse text stored for direct rendering
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -66,23 +71,8 @@ type Bookmark
   chapter: Int!
   verse: Int!
   label: String
+  text: String # ⬅️ NEW: verse text stored for direct rendering
   createdAt: AWSDateTime!
-}
-
-# === READING PROGRESS ===
-type ReadingProgress
-  @model
-  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
-  id: ID!
-  userId: ID! @index(name: "byUser")
-  owner: String!
-  user: User @belongsTo(fields: ["userId"])
-  lastBook: String!
-  lastChapter: Int!
-  lastVerse: Int
-  streakDays: Int @default(value: "0")
-  lastReadDate: AWSDate
-  updatedAt: AWSDateTime!
 }
 
 # === STUDY SETS ===
@@ -107,6 +97,74 @@ type StudySetVerse
   id: ID!
   studySetId: ID! @index(name: "byStudySet", sortKeyFields: ["createdAt"])
   studySetOwner: String!
-  # ... other fields
-  createdAt: AWSDateTime
+  book: String!
+  chapter: Int!
+  verse: Int!
+  note: String
+  text: String # ⬅️ NEW: include verse text for study set rendering
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# === SOCIAL POSTS ===
+type Post
+  @model
+  @auth(rules: [
+    { allow: owner, ownerField: "owner" },
+    { allow: private, operations: [read] }
+  ]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  content: String!
+  verseRef: String
+  mediaUrl: String
+  likes: Int! @default(value: "0")
+  comments: [PostComment] @hasMany(indexName: "byPost", fields: ["id"])
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+# === COMMENTS ON POSTS ===
+type PostComment
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "owner" }]) {
+  id: ID!
+  postId: ID! @index(name: "byPost", sortKeyFields: ["createdAt"])
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  user: User @belongsTo(fields: ["userId"])
+  content: String!
+  createdAt: AWSDateTime!
+}
+
+# === FRIENDSHIPS ===
+type Friendship
+  @model
+  @auth(rules: [
+    { allow: owner, ownerField: "owner" },
+    { allow: private, operations: [read] }
+  ]) {
+  id: ID!
+  userId: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
+  owner: String!
+  friendId: ID!
+  status: String!
+  createdAt: AWSDateTime!
+}
+
+# === SHARED STUDY SETS ===
+type SharedStudySet
+  @model
+  @auth(rules: [
+    { allow: owner, ownerField: "owner" },
+    { allow: private, operations: [read] }
+  ]) {
+  id: ID!
+  studySetId: ID! @index(name: "byStudySet", sortKeyFields: ["sharedWithUserId"])
+  sharedWithUserId: ID!
+  owner: String!
+  permissions: String! @default(value: "view")
+  createdAt: AWSDateTime!
 }

@@ -1,4 +1,3 @@
-// components/ChapterView.jsx
 import React, { useState, useEffect } from "react";
 import "./styles/ChapterView.css";
 import { API, Auth } from "aws-amplify";
@@ -9,7 +8,7 @@ import {
   updateHighlight,
   deleteHighlight,
   createComment,
-  deleteComment,   // ← NEW: for deleting comments
+  deleteComment,
   createBookmark,
   deleteBookmark,
 } from "../graphql/mutations";
@@ -38,165 +37,207 @@ function ChapterView({ book, chapter, verses }) {
   const [commentText, setCommentText] = useState("");
   const [error, setError] = useState(null);
 
-  /* -------------------------------------------------
-   *  USER AUTH
-   * ------------------------------------------------- */
+    const openModal = (verseNum) => {
+    setModalVerse(verseNum);
+    setCommentText(""); // Reset comment text when opening modal
+  };
+
+  const closeModal = () => {
+    setModalVerse(null);
+    setCommentText(""); // Reset comment text when closing
+  };
+  // Get verse text helper
+  const getVerseText = (verseNum) => {
+    return verses.find(v => v.verse === verseNum)?.text || "";
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         setUserId(user.username);
       } catch (err) {
-        setError("Please sign in.");
+        setError("Please sign in to make annotations.");
       }
     };
     fetchUser();
   }, []);
 
-  /* -------------------------------------------------
-   *  FETCH DATA
-   * ------------------------------------------------- */
   useEffect(() => {
-    if (!userId) return;
-const fetchUserData = async () => {
-  try {
-    console.log("Fetching data for:", { userId, book, chapter });
+    if (!userId || !book || !chapter) return;
 
-    // HIGHLIGHTS
-    const hRes = await API.graphql({
-      query: highlightsByUserIdAndCreatedAt,
-      variables: {
-        userId,
-        filter: { book: { eq: book }, chapter: { eq: chapter } },
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-    });
-    console.log("Highlights loaded:", hRes.data?.highlightsByUserIdAndCreatedAt?.items);
+    const fetchUserData = async () => {
+      try {
+        console.log("Fetching data for:", { userId, book, chapter });
 
-    // COMMENTS
-    const cRes = await API.graphql({
-      query: listComments,
-      variables: {
-        filter: {
-          book: { eq: book },
-          chapter: { eq: chapter },
-          owner: { eq: userId },
-        },
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-    });
-    console.log("Comments raw response:", cRes);
+        // Fetch highlights
+        const hRes = await API.graphql({
+          query: highlightsByUserIdAndCreatedAt,
+          variables: {
+            userId,
+            filter: { book: { eq: book }, chapter: { eq: chapter } },
+          },
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+        });
 
-    // BOOKMARKS
-    const bRes = await API.graphql({
-      query: bookmarksByUserIdAndCreatedAt,
-      variables: {
-        userId,
-        filter: { book: { eq: book }, chapter: { eq: chapter } },
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-    });
-    console.log("Bookmarks loaded:", bRes.data?.bookmarksByUserIdAndCreatedAt?.items);
+        // Fetch comments
+        const cRes = await API.graphql({
+          query: listComments,
+          variables: {
+            filter: {
+              book: { eq: book },
+              chapter: { eq: chapter },
+              owner: { eq: userId },
+            },
+          },
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+        });
 
-    // Process data...
-    const hMap = {};
-    (hRes.data?.highlightsByUserIdAndCreatedAt?.items || []).forEach((h) => {
-      hMap[h.verse] = { color: h.color, id: h.id, owner: h.owner };
-    });
-    setHighlights(hMap);
+        // Fetch bookmarks
+        const bRes = await API.graphql({
+          query: bookmarksByUserIdAndCreatedAt,
+          variables: {
+            userId,
+            filter: { book: { eq: book }, chapter: { eq: chapter } },
+          },
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+        });
 
-    const cMap = {};
-    (cRes.data?.listComments?.items || []).forEach((c) => {
-      const v = c.verse;
-      if (!cMap[v]) cMap[v] = [];
-      cMap[v].push(c);
-    });
-    setComments(cMap);
+        // Process highlights
+        const hMap = {};
+        (hRes.data?.highlightsByUserIdAndCreatedAt?.items || []).forEach((h) => {
+          hMap[h.verse] = { color: h.color, id: h.id, owner: h.owner };
+        });
+        setHighlights(hMap);
 
-    const bMap = new Map();
-    (bRes.data?.bookmarksByUserIdAndCreatedAt?.items || []).forEach((b) => {
-      bMap.set(b.verse, b.id);
-    });
-    setBookmarks(bMap);
+        // Process comments
+        const cMap = {};
+        (cRes.data?.listComments?.items || []).forEach((c) => {
+          const v = c.verse;
+          if (!cMap[v]) cMap[v] = [];
+          cMap[v].push(c);
+        });
+        setComments(cMap);
 
-  } catch (err) {
-    console.error("fetchUserData FAILED:", err);
-    // Show detailed error
-    setError(`Failed to load data: ${err.message || JSON.stringify(err)}`);
-  }
-};
+        // Process bookmarks
+        const bMap = new Map();
+        (bRes.data?.bookmarksByUserIdAndCreatedAt?.items || []).forEach((b) => {
+          bMap.set(b.verse, b.id);
+        });
+        setBookmarks(bMap);
+
+      } catch (err) {
+        console.error("Data fetch failed:", err);
+        if (err.errors) {
+          console.error("GraphQL Errors:", err.errors);
+        }
+        setError("Failed to load annotations");
+      }
+    };
+
     fetchUserData();
   }, [userId, book, chapter]);
 
-  /* -------------------------------------------------
-   *  OPEN MODAL
-   * ------------------------------------------------- */
-  const openModal = (verseNum) => {
-    if (!userId) return setError("Sign in to edit.");
-    setModalVerse(verseNum);
-    setCommentText("");
-  };
-
-  /* -------------------------------------------------
-   *  HIGHLIGHT
-   * ------------------------------------------------- */
   const handleColor = async (verseNum, color) => {
+    if (!userId) return setError("Please sign in to highlight verses.");
+    
     const existing = highlights[verseNum];
+    const verseText = getVerseText(verseNum);
+    
     try {
       if (existing && existing.color === color) {
+        // Delete highlight
         await API.graphql({
           query: deleteHighlight,
           variables: { input: { id: existing.id } },
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
-        setHighlights((p) => {
-          const n = { ...p };
-          delete n[verseNum];
-          return n;
+        setHighlights(prev => {
+          const next = { ...prev };
+          delete next[verseNum];
+          return next;
         });
       } else if (existing) {
-        await API.graphql({
+        // Update highlight
+        const response = await API.graphql({
           query: updateHighlight,
-          variables: { input: { id: existing.id, color } },
-          authMode: "AMAZON_COGNITO_USER_POOLS",
-        });
-        setHighlights((p) => ({
-          ...p,
-          [verseNum]: { ...p[verseNum], color },
-        }));
-      } else if (color) {
-        const id = `${userId}#${book}#${chapter}#${verseNum}`;
-        const res = await API.graphql({
-          query: createHighlight,
-          variables: {
-            input: { id, userId, owner: userId, book, chapter, verse: verseNum, color },
+          variables: { 
+            input: { 
+              id: existing.id,
+              color,
+              text: verseText
+            } 
           },
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
-        setHighlights((p) => ({
-          ...p,
-          [verseNum]: { color, id: res.data.createHighlight.id, owner: userId },
+        if (response.errors) throw response;
+        setHighlights(prev => ({
+          ...prev,
+          [verseNum]: { ...prev[verseNum], color },
+        }));
+      } else {
+        // Create new highlight
+        const response = await API.graphql({
+          query: createHighlight,
+          variables: {
+            input: {
+              userId,
+              owner: userId,
+              book,
+              chapter,
+              verse: verseNum,
+              color,
+              text: verseText
+            },
+          },
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+        });
+        if (response.errors) throw response;
+        setHighlights(prev => ({
+          ...prev,
+          [verseNum]: { 
+            color, 
+            id: response.data.createHighlight.id,
+            owner: userId 
+          },
         }));
       }
-    } catch (e) {
-      console.error(e);
-      setError("Highlight failed.");
-    }
+   } catch (err) {
+  console.error("Highlight operation failed:", err);
+  if (err.errors) {
+    // Add detailed error logging
+    err.errors.forEach((e, i) => {
+      console.error(`GraphQL Error ${i + 1}:`, {
+        message: e.message,
+        path: e.path,
+        locations: e.locations
+      });
+    });
+  }
+  setError(err.errors?.[0]?.message || "Failed to update highlight");
+}
   };
 
-  /* -------------------------------------------------
-   *  SAVE COMMENT
-   * ------------------------------------------------- */
   const saveComment = async (verseNum) => {
-    if (!commentText.trim()) return;
+    if (!userId) {
+      setError("Please sign in to add comments.");
+      return false;
+    }
+    if (!commentText.trim()) {
+      setError("Comment cannot be empty.");
+      return false;
+    }
+
+    setError(null);
+
+    const verseText = getVerseText(verseNum);
     const verseKey = `${book}#${chapter}#${verseNum}`;
-    const id = `${userId}#${verseKey}#${Date.now()}`;
+
     try {
-      const res = await API.graphql({
+      const response = await API.graphql({
         query: createComment,
         variables: {
           input: {
-            id,
             userId,
             owner: userId,
             verseKey,
@@ -204,25 +245,58 @@ const fetchUserData = async () => {
             chapter,
             verse: verseNum,
             body: commentText,
+            text: verseText,
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      setComments((p) => ({
-        ...p,
-        [verseNum]: [...(p[verseNum] || []), res.data.createComment],
+
+      // GraphQL-level errors (some clients put errors on the top-level response)
+      if (response.errors && response.errors.length) {
+        console.error("GraphQL errors returned:", response.errors);
+        const msg = response.errors[0]?.message || "Failed to save comment";
+        setError(msg);
+        return false;
+      }
+
+      const created = response?.data?.createComment;
+      if (!created) {
+        // Unexpected shape
+        console.error("Unexpected createComment response:", response);
+        setError("Failed to save comment (unexpected response).");
+        return false;
+      }
+
+      setComments((prev) => ({
+        ...prev,
+        [verseNum]: [...(prev[verseNum] || []), created],
       }));
       setCommentText("");
       setModalVerse(null);
-    } catch (e) {
-      console.error(e);
-      setError("Comment failed.");
+      return true;
+    } catch (err) {
+      // Network / client errors
+      console.error("Comment creation failed:", err);
+
+      // Amplify GraphQL errors are sometimes nested
+      if (err?.errors && err.errors.length) {
+        console.error("Nested GraphQL errors:", err.errors);
+        setError(err.errors[0]?.message || "Failed to save comment");
+      } else if (err?.message) {
+        // Common cases: NotAuthorizedException, NetworkError, etc.
+        if (err.message.includes("NotAuthorized") || err.message.includes("Unauthorized")) {
+          setError("Please sign in to add comments.");
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError("Failed to save comment");
+      }
+
+      return false;
     }
   };
 
-  /* -------------------------------------------------
-   *  DELETE COMMENT ← NEW
-   * ------------------------------------------------- */
   const handleDeleteComment = async (commentId, verseNum) => {
     try {
       await API.graphql({
@@ -230,21 +304,22 @@ const fetchUserData = async () => {
         variables: { input: { id: commentId } },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      setComments((p) => ({
-        ...p,
-        [verseNum]: p[verseNum].filter((c) => c.id !== commentId),
+      setComments(prev => ({
+        ...prev,
+        [verseNum]: prev[verseNum].filter(c => c.id !== commentId),
       }));
-    } catch (e) {
-      console.error("Delete comment failed:", e);
-      setError("Could not delete comment.");
+    } catch (err) {
+      console.error("Comment deletion failed:", err);
+      setError("Could not delete comment");
     }
   };
 
-  /* -------------------------------------------------
-   *  BOOKMARK
-   * ------------------------------------------------- */
   const toggleBookmark = async (verseNum) => {
+    if (!userId) return setError("Please sign in to bookmark verses.");
+    
+    const verseText = getVerseText(verseNum);
     const has = bookmarks.has(verseNum);
+    
     try {
       if (has) {
         await API.graphql({
@@ -252,26 +327,42 @@ const fetchUserData = async () => {
           variables: { input: { id: bookmarks.get(verseNum) } },
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
-        setBookmarks((m) => {
-          const n = new Map(m);
-          n.delete(verseNum);
-          return n;
+        setBookmarks(prev => {
+          const next = new Map(prev);
+          next.delete(verseNum);
+          return next;
         });
       } else {
-        const id = `${userId}#${book}#${chapter}#${verseNum}`;
-        const res = await API.graphql({
+        const response = await API.graphql({
           query: createBookmark,
           variables: {
-            input: { id, userId, owner: userId, book, chapter, verse: verseNum },
+            input: {
+              userId,
+              owner: userId,
+              book,
+              chapter,
+              verse: verseNum,
+              text: verseText
+            },
           },
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
-        setBookmarks((m) => new Map(m).set(verseNum, res.data.createBookmark.id));
+        if (response.errors) throw response;
+        setBookmarks(prev => new Map(prev).set(verseNum, response.data.createBookmark.id));
       }
-    } catch (e) {
-      console.error(e);
-      setError("Bookmark failed.");
-    }
+    } catch (err) {
+  console.error("Bookmark operation failed:", err);
+  if (err.errors) {
+    err.errors.forEach((e, i) => {
+      console.error(`GraphQL Error ${i + 1}:`, {
+        message: e.message,
+        path: e.path,
+        locations: e.locations
+      });
+    });
+  }
+  setError(err.errors?.[0]?.message || "Failed to update bookmark");
+}
   };
 
   /* -------------------------------------------------
